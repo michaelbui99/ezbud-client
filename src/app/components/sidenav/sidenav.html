@@ -1,0 +1,32 @@
+<mat-sidenav-container [style.height]="sidenavHeight">
+  <mat-sidenav class="nav" opened mode="side" [style.width]="'250px'">
+    <mat-nav-list class="menu-items">
+      @for (menuItem of menuItems(); track $index) {
+      <a mat-list-item [routerLink]="menuItem.route" class="menu-item">
+        <mat-icon matListItemIcon>{{ menuItem.icon }}</mat-icon>
+        <span matListItemTitle>{{ menuItem.label }}</span>
+      </a>
+      }
+    </mat-nav-list>
+    <mat-divider style="margin-top: 3rem; margin-bottom: 3rem"></mat-divider>
+    <h2 class="accounts-header">Accounts</h2>
+    <div class="account-summary">
+      <p class="menu-text-bold">All accounts:</p>
+      <p class="menu-number">{{ allAccountsTotal() }}</p>
+    </div>
+    <div class="account-summary">
+      <p class="menu-text-bold">On budget:</p>
+      <p class="menu-number">{{ onBudgetTotal() }}</p>
+    </div>
+    <mat-divider></mat-divider>
+    @for (account of onBudgetAccounts(); track $index) {
+    <div [routerLink]="['/account', account.id]" class="account-summary">
+      <p class="menu-text">{{ account.name }}:</p>
+      <p class="menu-number">{{ accountBalances()[account.id] }}</p>
+    </div>
+    }
+  </mat-sidenav>
+  <mat-sidenav-content class="content">
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

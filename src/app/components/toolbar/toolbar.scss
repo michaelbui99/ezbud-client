@@ -1,0 +1,18 @@
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  width: 100%;
+  box-shadow: var(--mat-sys-level2);
+  position: relative;
+  z-index: 10;
+}
+
+.header{
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover{
+    opacity: 0.7;
+  }
+}

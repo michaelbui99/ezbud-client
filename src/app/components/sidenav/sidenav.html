@@ -10,21 +10,25 @@
     </mat-nav-list>
     <mat-divider style="margin-top: 3rem; margin-bottom: 3rem"></mat-divider>
     <h2 class="accounts-header">Accounts</h2>
-    <div class="account-summary">
+    <div [routerLink]="['/accounts']" class="account-summary">
       <p class="menu-text-bold">All accounts:</p>
       <p class="menu-number">{{ allAccountsTotal() }}</p>
     </div>
-    <div class="account-summary">
+    <div [routerLink]="['/accounts', 'onBudget']" class="account-summary">
       <p class="menu-text-bold">On budget:</p>
       <p class="menu-number">{{ onBudgetTotal() }}</p>
     </div>
     <mat-divider></mat-divider>
     @for (account of onBudgetAccounts(); track $index) {
-    <div [routerLink]="['/account', account.id]" class="account-summary">
+    <div [routerLink]="['/accounts', account.id]" class="account-summary">
       <p class="menu-text">{{ account.name }}:</p>
       <p class="menu-number">{{ accountBalances()[account.id] }}</p>
     </div>
     }
+    <button class="add-account-btn" matButton>
+      <mat-icon>add</mat-icon>
+      Add account
+    </button>
   </mat-sidenav>
   <mat-sidenav-content class="content">
     <ng-content></ng-content>

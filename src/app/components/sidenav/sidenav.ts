@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, computed, input, Input, InputSignal, OnInit, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, computed, inject, input, Input, InputSignal, OnInit, signal, WritableSignal } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { LayoutService } from '../../services/layout.service';
@@ -33,12 +33,13 @@ export class Sidenav implements AfterViewInit, OnInit {
   toolbarHeight: number = 0;
   sidenavHeight: string = '100vh';
 
-  constructor(
-    private readonly layoutService: LayoutService,
-    private readonly accountService: AccountService,
-    private readonly cdr: ChangeDetectorRef,
-  ) {
-    layoutService.toolbarHeight$.subscribe({
+
+  private readonly layoutService: LayoutService = inject(LayoutService);
+  private readonly accountService: AccountService = inject(AccountService);
+  private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+  constructor() {
+    this.layoutService.toolbarHeight$.subscribe({
       next: height => {
         this.toolbarHeight = height;
       }

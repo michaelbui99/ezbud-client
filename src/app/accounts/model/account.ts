@@ -1,6 +1,8 @@
 import { Transaction } from "./transaction";
 import { compareAsc } from 'date-fns'
 
+export const ON_BUDGET_ACCOUNT_ID = "onBudget";
+
 export type Account = {
   id: string;
   name: string;

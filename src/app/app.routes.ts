@@ -13,7 +13,11 @@ export const routes: Routes = [
     component: Budgetpage
   },
   {
-    path: 'account/:id',
+    path: 'accounts/:id',
+    component: Accountpage
+  },
+  {
+    path: 'accounts',
     component: Accountpage
   }
 ];

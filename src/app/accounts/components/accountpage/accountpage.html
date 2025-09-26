@@ -1,1 +1,26 @@
-<p>accountpage works!</p>
+<div class="account-container">
+  <div class="info">
+    <h2>{{ account()?.name }} <mat-icon class="edit-icon">edit</mat-icon></h2>
+    <p>{{ balance() }}</p>
+  </div>
+
+  <div class="actions">
+    <div class="left">
+      <button matButton="text" class="action-btn">
+        <mat-icon>download</mat-icon>
+        Import
+      </button>
+      <button matButton="text" class="action-btn">
+        <mat-icon>add</mat-icon>
+        Add New
+      </button>
+    </div>
+    <div class="right">
+      <mat-form-field class="search" appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

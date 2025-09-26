@@ -16,11 +16,60 @@
       </button>
     </div>
     <div class="right">
-      <mat-form-field class="search" appearance="outline">
-        <mat-label>Search</mat-label>
-        <input matInput />
-        <mat-icon matPrefix>search</mat-icon>
-      </mat-form-field>
+      <p-float-label variant="on">
+        <p-icon-field>
+          <p-inputIcon class="pi pi-search" />
+          <input
+            pSize="small"
+            class="search"
+            type="text"
+            id="transaction_search"
+            pInputText
+          />
+        </p-icon-field>
+        <label for="transaction_search">Search</label>
+      </p-float-label>
     </div>
   </div>
 </div>
+
+@if(account()){
+<table mat-table [dataSource]="account()!.transactions">
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef>Date</th>
+    <td mat-cell *matCellDef="let transaction">
+      {{ formatDate(transaction.date) }}
+    </td>
+  </ng-container>
+  <mat-text-column name="payee"></mat-text-column>
+  <mat-text-column name="category"></mat-text-column>
+  <ng-container matColumnDef="payment">
+    <th mat-header-cell *matHeaderCellDef>Payment</th>
+    <td mat-cell *matCellDef="let transaction">
+      {{ transaction.payment | currency : "DKK" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="deposit">
+    <th mat-header-cell *matHeaderCellDef>Deposit</th>
+    <td mat-cell *matCellDef="let transaction">
+      {{ transaction.deposit | currency : "DKK" }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="cleared">
+    <th mat-header-cell *matHeaderCellDef>Cleared</th>
+    <td mat-cell *matCellDef="let transaction">
+      @if(transaction.cleared){
+      <div class="checkbox" (click)="onCleared(transaction)">
+        <mat-icon>check_box</mat-icon>
+      </div>
+      }@else{
+      <div class="checkbox" (click)="onCleared(transaction)">
+      <mat-icon>check_box_outline_blank</mat-icon>
+      </div>
+      }
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+</table>
+}

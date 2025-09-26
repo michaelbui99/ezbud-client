@@ -24,7 +24,7 @@ export class AccountService {
           {
             payee: 'p1',
             category: '',
-            cleared: true,
+            cleared: false,
             deposit: 0,
             payment: 500,
             date: new Date(2025, 1, 3),
@@ -60,7 +60,7 @@ export class AccountService {
           {
             payee: 'p1',
             category: '',
-            cleared: true,
+            cleared: false,
             deposit: 0,
             payment: 500,
             date: new Date(2025, 1, 3),

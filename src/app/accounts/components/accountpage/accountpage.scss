@@ -50,3 +50,16 @@
   display: flex;
   flex-direction: row;
 }
+
+.search{
+  background-color: white;
+  color: #4c566a;
+}
+
+.checkbox{
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover{
+    opacity: 0.6;
+  }
+}

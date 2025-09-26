@@ -7,10 +7,29 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Transaction } from '../../model/transaction';
 import { MatInputModule } from '@angular/material/input';
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabel } from 'primeng/floatlabel';
+import { FormsModule } from '@angular/forms';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { MatTableModule } from '@angular/material/table';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-accountpage',
-  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatInputModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    InputTextModule,
+    FloatLabel,
+    FormsModule,
+    IconFieldModule,
+    InputIconModule,
+    MatTableModule
+  ],
   templateUrl: './accountpage.html',
   styleUrl: './accountpage.scss'
 })
@@ -22,6 +41,8 @@ export class Accountpage implements OnInit {
   })
 
   accountNameEditable: WritableSignal<boolean> = signal(false);
+
+  columnsToDisplay = ['date', 'payee', 'category', 'payment', 'deposit', 'cleared']
 
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   private readonly accountService: AccountService = inject(AccountService);
@@ -51,5 +72,13 @@ export class Accountpage implements OnInit {
         }
       })
     }
+  }
+
+  formatDate(date: Date){
+    return format(date, "yyyy/MM/dd")
+  }
+
+  onCleared(transaction: Transaction){
+    transaction.cleared = !transaction.cleared;
   }
 }

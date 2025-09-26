@@ -1,6 +1,22 @@
 <div class="account-container">
   <div class="info">
-    <h2>{{ account()?.name }} <mat-icon class="edit-icon">edit</mat-icon></h2>
+    @if(isEditingAccountName() && account()){
+    <div class="edit-name-input">
+      <input type="text" pInputText [(ngModel)]="newAccountName" size="normal" />
+      <span (click)="onSaveAccountName()"
+        ><mat-icon class="save-name">check</mat-icon></span
+      >
+    </div>
+    }@else {
+    <h2>
+      {{ account()?.name }}
+      @if(isAccountNameEditable()){
+      <span (click)="onEditAccountName()"
+        ><mat-icon class="edit-icon">edit</mat-icon></span
+      >
+      }
+    </h2>
+    }
     <p>{{ balance() }}</p>
   </div>
 
@@ -64,7 +80,7 @@
       </div>
       }@else{
       <div class="checkbox" (click)="onCleared(transaction)">
-      <mat-icon>check_box_outline_blank</mat-icon>
+        <mat-icon>check_box_outline_blank</mat-icon>
       </div>
       }
     </td>

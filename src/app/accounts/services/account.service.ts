@@ -1,11 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Account } from '../model/account';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+
+export type AccountsState = {
+  accounts: Account[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
+  private state: AccountsState = { accounts: [] }
+  private accounts: BehaviorSubject<Account[]> = new BehaviorSubject([] as Account[]);
+  $accounts = this.accounts.asObservable();
+
+  saveAccount(account: Account): void {
+    this.state.accounts = this.state.accounts.map(acc => acc.id === account.id ? account : acc);
+    this.accounts.next(this.state.accounts);
+  }
+
   getAccount(accountId: string): Observable<Account> {
     return of(
       {
@@ -43,7 +56,7 @@ export class AccountService {
   }
 
   getAccounts(): Observable<Account[]> {
-    return of([
+    this.state.accounts = [
       {
         name: 'test',
         id: 'test',
@@ -106,6 +119,8 @@ export class AccountService {
           },
         ]
       }
-    ]);
+    ];
+    this.accounts.next(this.state.accounts);
+    return this.$accounts;
   }
 }

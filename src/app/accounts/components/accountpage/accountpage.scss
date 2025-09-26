@@ -1,6 +1,7 @@
 .account-container {
   display: flex;
   flex-direction: column;
+  margin-top: 1rem;
 }
 
 .actions {
@@ -21,6 +22,11 @@
     align-items: center;
     gap: 0.5rem;
     color: #2e3440;
+  }
+
+  input {
+    background-color: white;
+    color: #4c566a;
   }
 }
 
@@ -51,15 +57,29 @@
   flex-direction: row;
 }
 
-.search{
+.search {
   background-color: white;
   color: #4c566a;
 }
 
-.checkbox{
+.checkbox {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  &:hover{
+  &:hover {
     opacity: 0.6;
+  }
+}
+
+.edit-name-input {
+  display: flex;
+  align-items: center;
+}
+
+.save-name {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    opacity: 0.6;
+    color: green;
   }
 }

@@ -40,7 +40,9 @@ export class Accountpage implements OnInit {
     return calculateBalance(transactions);
   })
 
-  accountNameEditable: WritableSignal<boolean> = signal(false);
+  isAccountNameEditable: WritableSignal<boolean> = signal(false);
+  isEditingAccountName: WritableSignal<boolean> = signal(false);
+  newAccountName: WritableSignal<string> = signal(this.account() ? this.account()!.name : "");
 
   columnsToDisplay = ['date', 'payee', 'category', 'payment', 'deposit', 'cleared']
 
@@ -55,7 +57,7 @@ export class Accountpage implements OnInit {
         next: account => {
           this.account.set(account);
           if (account.name !== ON_BUDGET_ACCOUNT_ID) {
-            this.accountNameEditable.set(true);
+            this.isAccountNameEditable.set(true);
           }
         }
       })
@@ -69,16 +71,34 @@ export class Accountpage implements OnInit {
             onBudget: true,
             transactions
           });
+          this.isAccountNameEditable.set(false)
         }
       })
     }
   }
 
-  formatDate(date: Date){
+  formatDate(date: Date) {
     return format(date, "yyyy/MM/dd")
   }
 
-  onCleared(transaction: Transaction){
+  onCleared(transaction: Transaction) {
     transaction.cleared = !transaction.cleared;
+  }
+
+  onEditAccountName() {
+    if (!this.isAccountNameEditable() || !this.account()) {
+      return;
+    }
+    this.isEditingAccountName.set(true);
+    this.newAccountName.set(this.account()!.name);
+  }
+
+  onSaveAccountName() {
+    if (!this.isAccountNameEditable() || !this.account()) {
+      return;
+    }
+    this.account()!.name = this.newAccountName();
+    this.accountService.saveAccount(this.account()!);
+    this.isEditingAccountName.set(false);
   }
 }

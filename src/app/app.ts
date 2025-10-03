@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Toolbar } from "./components/toolbar/toolbar";
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,9 @@ import { SideNavMenuItem } from './components/sidenav/menu-item';
 })
 export class App {
   protected readonly title = signal('ezbud-client');
+
   menuItems: SideNavMenuItem[] = []
+
   constructor() {
     this.menuItems = [
       {

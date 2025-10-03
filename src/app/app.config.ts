@@ -35,6 +35,9 @@ export const getAppConfig = (appConfig: AppConfig): ApplicationConfig => {
           realm: appConfig.keycloak.realm,
           clientId: appConfig.keycloak.clientId
         },
+        initOptions: {
+          onLoad: 'check-sso'
+        }
       }),
       {
         provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,

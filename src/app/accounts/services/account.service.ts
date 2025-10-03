@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Account } from '../model/account';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, map, mergeMap, Observable, of, tap } from 'rxjs';
+import { ConfigurationService } from '../../services/configuration.service';
+import { HttpClient } from '@angular/common/http';
 
 export type AccountsState = {
   accounts: Account[];
@@ -10,6 +12,8 @@ export type AccountsState = {
   providedIn: 'root'
 })
 export class AccountService {
+  private readonly configurationService: ConfigurationService = inject(ConfigurationService);
+  private readonly http: HttpClient = inject(HttpClient);
   private state: AccountsState = { accounts: [] }
   private accounts: BehaviorSubject<Account[]> = new BehaviorSubject([] as Account[]);
   $accounts = this.accounts.asObservable();
@@ -20,107 +24,23 @@ export class AccountService {
   }
 
   getAccount(accountId: string): Observable<Account> {
-    return of(
-      {
-        name: 'test',
-        id: 'test',
-        onBudget: true,
-        transactions: [
-          {
-            payee: 'p1',
-            category: '',
-            cleared: true,
-            deposit: 2000,
-            payment: 0,
-            date: new Date(2025, 1, 1),
-          },
-          {
-            payee: 'p1',
-            category: '',
-            cleared: false,
-            deposit: 0,
-            payment: 500,
-            date: new Date(2025, 1, 3),
-          },
-          {
-            payee: 'p1',
-            category: '',
-            cleared: true,
-            deposit: 0,
-            payment: 1000,
-            date: new Date(2025, 1, 2),
-          },
-        ]
-      }
-    )
+    return this.configurationService.getConfig().pipe(
+      mergeMap(config =>
+        this.http.get<Account>(`${config?.api.host}/api/v1/accounts/${accountId}`)
+      )
+    );
   }
 
   getAccounts(): Observable<Account[]> {
-    this.state.accounts = [
-      {
-        name: 'test',
-        id: 'test',
-        onBudget: true,
-        transactions: [
-          {
-            payee: 'p1',
-            category: '',
-            cleared: true,
-            deposit: 2000,
-            payment: 0,
-            date: new Date(2025, 1, 1),
-          },
-          {
-            payee: 'p1',
-            category: '',
-            cleared: false,
-            deposit: 0,
-            payment: 500,
-            date: new Date(2025, 1, 3),
-          },
-          {
-            payee: 'p1',
-            category: '',
-            cleared: true,
-            deposit: 0,
-            payment: 1000,
-            date: new Date(2025, 1, 2),
-          },
-        ]
-      },
-      {
-        name: 'test2',
-        id: 'test2',
-        onBudget: true,
-        transactions: [
-          {
-            payee: 'p1',
-            category: '',
-            cleared: true,
-            deposit: 2000,
-            payment: 0,
-            date: new Date(2025, 1, 1),
-          },
-          {
-            payee: 'p1',
-            category: '',
-            cleared: true,
-            deposit: 0,
-            payment: 700,
-            date: new Date(2025, 1, 3),
-          },
-          {
-            payee: 'p1',
-            category: '',
-            cleared: true,
-            deposit: 0,
-            payment: 1000,
-            date: new Date(2025, 1, 2),
-          },
-        ]
-      }
-    ];
-    this.accounts.next(this.state.accounts);
+    this.configurationService.getConfig().pipe(
+      mergeMap(config =>
+        this.http.get<Account[]>(`${config?.api.host}/api/v1/accounts`)
+      )
+    ).subscribe(accounts => {
+      this.state.accounts = accounts;
+      this.accounts.next(this.state.accounts);
+    })
+
     return this.$accounts;
   }
 }

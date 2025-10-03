@@ -5,6 +5,11 @@ import { Observable } from 'rxjs';
 export type AppConfig = {
   api: {
     host: string;
+  },
+  keycloak: {
+    host: string;
+    realm: string;
+    clientId: string;
   }
 }
 

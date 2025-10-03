@@ -1,5 +1,10 @@
 {
   "api": {
-    "host": "https://localhost:8081"
+    "host": "https://localhost:8042"
+  },
+  "keycloak": {
+    "host": "http://localhost:8080",
+    "realm": "ezbud",
+    "clientId": "ezbud"
   }
 }

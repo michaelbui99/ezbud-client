@@ -1,0 +1,102 @@
+<h2 matDialogTitle>Import transactions ({{transactions().length}})</h2>
+<mat-dialog-content>
+  <div class="content-wrapper">
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="transactions()">
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let transaction">
+            {{ formatDate(transaction.date) }}
+          </td>
+        </ng-container>
+        <mat-text-column name="payee"></mat-text-column>
+        <mat-text-column name="notes"></mat-text-column>
+        <mat-text-column name="category"></mat-text-column>
+
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef>Amount</th>
+          <td mat-cell *matCellDef="let transaction">
+            {{ transaction.amount | currency : "DKK" }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+        <tr
+          mat-row
+          *matRowDef="let transaction; columns: columnsToDisplay"
+        ></tr>
+      </table>
+    </div>
+    <div class="options-wrapper">
+      <div class="mappings">
+        <h3>Field mappings</h3>
+        <div class="field-mappings">
+          <mat-form-field>
+            <mat-label>Date</mat-label>
+            <mat-select [(value)]="dateSource">
+              @for (header of headers(); track header) {
+              <mat-option [value]="header">{{ header }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Payee</mat-label>
+            <mat-select [(value)]="payeeSource">
+              @for (header of headers(); track header) {
+              <mat-option [value]="header">{{ header }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Notes</mat-label>
+            <mat-select [(value)]="notesSource">
+              @for (header of headers(); track header) {
+              <mat-option [value]="header">{{ header }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Category</mat-label>
+            <mat-select [(value)]="categorySource">
+              @for (header of headers(); track header) {
+              <mat-option [value]="header">{{ header }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Amount</mat-label>
+            <mat-select [(value)]="amountSource">
+              @for (header of headers(); track header) {
+              <mat-option [value]="header">{{ header }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="csv-options">
+        <h3>CSV Options</h3>
+        <mat-form-field>
+          <mat-label>Delimiter</mat-label>
+          <mat-select [(value)]="delimiter">
+            @for (delimiter of delimiters; track delimiter){
+            <mat-option [value]="delimiter">{{ delimiter }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Date format</mat-label>
+          <mat-select [(value)]="dateFormat">
+            @for (dateFormat of dateFormats ; track dateFormat ){
+            <mat-option [value]="dateFormat">{{ dateFormat }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton (click)="onCancel()">Cancel</button>
+  <button matButton [disabled]="!canImport()" (click)="onImport()">
+    Import
+  </button>
+</mat-dialog-actions>

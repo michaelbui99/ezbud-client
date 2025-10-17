@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, ElementRef, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { Account, calculateBalance, ON_BUDGET_ACCOUNT_ID } from '../../model/account';
@@ -14,6 +14,10 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { MatTableModule } from '@angular/material/table';
 import { format } from 'date-fns';
+import { readFile } from '../../../util/FileUtil';
+import { CsvService } from '../../../services/csv.service';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { ImportTransactionsDialog, ImportTransactionsDialogData } from '../import-transactions-dialog/import-transactions-dialog';
 
 @Component({
   selector: 'app-accountpage',
@@ -34,6 +38,9 @@ import { format } from 'date-fns';
   styleUrl: './accountpage.scss'
 })
 export class Accountpage implements OnInit {
+  @ViewChild('transactionsInput')
+  csvFileInput!: ElementRef;
+
   account: WritableSignal<Account | undefined> = signal(undefined);
   balance = computed(() => {
     const transactions = this.account() ? this.account()!.transactions : [];
@@ -48,7 +55,8 @@ export class Accountpage implements OnInit {
 
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   private readonly accountService: AccountService = inject(AccountService);
-
+  private readonly csvService: CsvService = inject(CsvService);
+  private readonly dialog = inject(MatDialog)
 
   ngOnInit(): void {
     const accountId = this.activatedRoute.snapshot.paramMap.get("id");
@@ -100,5 +108,43 @@ export class Accountpage implements OnInit {
     this.account()!.name = this.newAccountName();
     this.accountService.saveAccount(this.account()!);
     this.isEditingAccountName.set(false);
+  }
+
+  async onCsvUploaded(event: any) {
+    const files = event.target["files"] as FileList;
+    if (files.length === 0) {
+      return;
+    }
+
+    const file = files.item(0);
+    if (file === null) {
+      return;
+    }
+
+    const csvContent = await readFile(file);
+    const parsedCsv = await this.csvService.parseCsv(csvContent, ";");
+
+    if (!parsedCsv.success) {
+      return;
+    }
+
+    const dialogData: ImportTransactionsDialogData = {
+      csv: parsedCsv,
+      rawCsv: csvContent
+    }
+
+    const dialogRef = this.dialog.open(ImportTransactionsDialog, {
+      data: dialogData,
+      minWidth: '70vw'
+    });
+    dialogRef.afterClosed().subscribe({
+      next: res => {
+        this.csvFileInput.nativeElement.value = "";
+        if (res) {
+          console.log(res);
+          return;
+        }
+      }
+    })
   }
 }

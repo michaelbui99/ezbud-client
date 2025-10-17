@@ -22,7 +22,8 @@
 
   <div class="actions">
     <div class="left">
-      <button matButton="text" class="action-btn">
+      <input type="file" accept=".csv" hidden #transactionsInput (change)="onCsvUploaded($event)">
+      <button matButton="text" class="action-btn" (click)="transactionsInput.click()">
         <mat-icon>download</mat-icon>
         Import
       </button>

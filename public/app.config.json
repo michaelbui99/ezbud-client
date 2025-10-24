@@ -1,6 +1,6 @@
 {
   "api": {
-    "host": "https://localhost:8042"
+    "host": "http://localhost:4242"
   },
   "keycloak": {
     "host": "http://localhost:8080",

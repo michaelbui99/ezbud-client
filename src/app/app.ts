@@ -4,6 +4,7 @@ import { Toolbar } from "./components/toolbar/toolbar";
 import { CommonModule } from '@angular/common';
 import { Sidenav } from "./components/sidenav/sidenav";
 import { SideNavMenuItem } from './components/sidenav/menu-item';
+import Keycloak from 'keycloak-js';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +12,9 @@ import { SideNavMenuItem } from './components/sidenav/menu-item';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
+export class App  implements OnInit{
   protected readonly title = signal('ezbud-client');
+  private readonly keycloak = inject(Keycloak)
 
   menuItems: SideNavMenuItem[] = []
 
@@ -34,5 +36,10 @@ export class App {
         route: 'rules'
       },
     ]
+  }
+  ngOnInit(): void {
+    if (!this.keycloak.authenticated){
+      this.keycloak.login();
+    }
   }
 }

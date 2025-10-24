@@ -3,6 +3,7 @@ import { Account } from '../model/account';
 import { BehaviorSubject, map, mergeMap, Observable, of, tap } from 'rxjs';
 import { ConfigurationService } from '../../services/configuration.service';
 import { HttpClient } from '@angular/common/http';
+import Keycloak from 'keycloak-js';
 
 export type AccountsState = {
   accounts: Account[];

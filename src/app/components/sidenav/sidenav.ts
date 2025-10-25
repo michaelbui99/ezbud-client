@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { AccountService } from '../../accounts/services/account.service';
 import { Account, calculateBalance } from '../../accounts/model/account';
+import Keycloak from 'keycloak-js';
 
 @Component({
   selector: 'app-sidenav',
@@ -37,6 +38,7 @@ export class Sidenav implements AfterViewInit, OnInit {
   private readonly layoutService: LayoutService = inject(LayoutService);
   private readonly accountService: AccountService = inject(AccountService);
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private readonly keycloak = inject(Keycloak);
 
   constructor() {
     this.layoutService.toolbarHeight$.subscribe({
@@ -65,5 +67,9 @@ export class Sidenav implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
     this.sidenavHeight = `calc(100vh - ${this.toolbarHeight}px)`;
     this.cdr.detectChanges();
+  }
+
+  onLogout(){
+    this.keycloak.logout();
   }
 }
